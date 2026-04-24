@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us | Gaming Zone</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #0f172a, #111827, #1e293b);
+        color: white;
+        min-height: 100vh;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: auto;
+        padding: 60px 0;
+      }
+
+      .hero {
+        text-align: center;
+        margin-bottom: 50px;
+      }
+
+      .hero h1 {
+        font-size: 3rem;
+        color: #38bdf8;
+        margin-bottom: 15px;
+        text-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+      }
+
+      .hero p {
+        color: #d1d5db;
+        max-width: 750px;
+        margin: auto;
+        line-height: 1.8;
+        font-size: 1.05rem;
+      }
+
+      .contact-wrapper {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+        align-items: start;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 30px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .card h2 {
+        color: #facc15;
+        margin-bottom: 20px;
+        font-size: 2rem;
+      }
+
+      .info-box {
+        margin-bottom: 20px;
+      }
+
+      .info-box h3 {
+        color: #38bdf8;
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+      }
+
+      .info-box p {
+        color: #e5e7eb;
+        line-height: 1.7;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.06);
+        color: white;
+        outline: none;
+        font-size: 1rem;
+      }
+
+      input::placeholder,
+      textarea::placeholder {
+        color: #cbd5e1;
+      }
+
+      textarea {
+        min-height: 140px;
+        resize: vertical;
+      }
+
+      button {
+        padding: 14px;
+        border: none;
+        border-radius: 14px;
+        background: #38bdf8;
+        color: #0f172a;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(56, 189, 248, 0.3);
+      }
+
+      .owner-box {
+        margin-top: 30px;
+        text-align: center;
+        padding: 25px;
+        border-radius: 18px;
+        background: rgba(250, 204, 21, 0.08);
+        border: 1px solid rgba(250, 204, 21, 0.2);
+      }
+
+      .owner-box h3 {
+        color: #facc15;
+        margin-bottom: 10px;
+        font-size: 1.6rem;
+      }
+
+      .owner-box p {
+        color: #d1d5db;
+        line-height: 1.8;
+      }
+
+      footer {
+        text-align: center;
+        padding: 25px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        color: #cbd5e1;
+        margin-top: 50px;
+      }
+
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.2rem;
+        }
+
+        .card h2 {
+          font-size: 1.6rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="hero">
+        <h1>📩 Contact Us</h1>
+        <p>
+          Have questions, feedback, or want to collaborate with Gaming Zone?
+          Feel free to contact us anytime. We would love to hear from you.
+        </p>
+      </div>
+
+      <div class="contact-wrapper">
+        <div class="card">
+          <h2>Get In Touch</h2>
+
+          <div class="info-box">
+            <h3>📍 Address</h3>
+            <p>Mumbai, Maharashtra, India</p>
+          </div>
+
+          <div class="info-box">
+            <h3>📧 Email</h3>
+            <p>rahulgamingzone@gmail.com</p>
+          </div>
+
+          <div class="info-box">
+            <h3>📞 Phone</h3>
+            <p>+91 XXXXX XXXXX</p>
+          </div>
+
+          <div class="info-box">
+            <h3>🕒 Support Time</h3>
+            <p>Monday to Sunday — 10:00 AM to 9:00 PM</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Send Message</h2>
+
+          <form>
+            <input type="text" placeholder="Enter Your Name" required />
+            <input type="email" placeholder="Enter Your Email" required />
+            <input type="text" placeholder="Subject" required />
+            <textarea placeholder="Write Your Message Here..."></textarea>
+            <button type="submit">Send Message 🚀</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="owner-box">
+        <h3>👑 Founder: RAHUL GUPTA</h3>
+        <p>
+          Gaming Zone is proudly designed and developed by Rahul Gupta with a
+          vision to create a premium gaming platform featuring advanced games,
+          modern UI/UX, and a powerful user experience.
+        </p>
+      </div>
+    </div>
+
+    <footer>
+      <p>© 2026 Gaming Zone | Contact Page | Developed by RAHUL GUPTA</p>
+    </footer>
+  </body>
+</html>

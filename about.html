@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us | Gaming Zone</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #0f172a, #111827, #1e293b);
+        color: white;
+        min-height: 100vh;
+      }
+
+      .hero {
+        text-align: center;
+        padding: 70px 20px 40px;
+      }
+
+      .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        color: #38bdf8;
+        text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+      }
+
+      .hero p {
+        max-width: 800px;
+        margin: auto;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #d1d5db;
+      }
+
+      section {
+        padding: 60px 8%;
+      }
+
+      h2 {
+        text-align: center;
+        font-size: 2.2rem;
+        margin-bottom: 40px;
+        color: #facc15;
+      }
+
+      .game-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+      }
+
+      .game-card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 30px 25px;
+        backdrop-filter: blur(10px);
+        transition: 0.4s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .game-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(56, 189, 248, 0.25);
+        border-color: rgba(56, 189, 248, 0.4);
+      }
+
+      .game-card h3 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        color: #38bdf8;
+      }
+
+      .game-card p {
+        line-height: 1.7;
+        color: #e5e7eb;
+        font-size: 0.98rem;
+      }
+
+      .owner-box {
+        margin-top: 50px;
+        text-align: center;
+        padding: 30px;
+        border-radius: 20px;
+        background: rgba(250, 204, 21, 0.08);
+        border: 1px solid rgba(250, 204, 21, 0.2);
+      }
+
+      .owner-box h3 {
+        font-size: 2rem;
+        color: #facc15;
+        margin-bottom: 10px;
+      }
+
+      .owner-box p {
+        color: #d1d5db;
+        font-size: 1rem;
+        line-height: 1.8;
+      }
+
+      footer {
+        text-align: center;
+        padding: 30px 20px;
+        margin-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        color: #cbd5e1;
+        font-size: 0.95rem;
+      }
+
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.2rem;
+        }
+
+        h2 {
+          font-size: 1.8rem;
+        }
+
+        .game-card {
+          padding: 24px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero">
+      <h1>🎮 Gaming Zone</h1>
+      <p>
+        Welcome to Gaming Zone — your ultimate destination for fun, advanced,
+        and mobile-friendly gaming experiences. Enjoy premium UI/UX, smooth
+        gameplay, modern animations, and exciting future-ready features.
+      </p>
+    </div>
+
+    <section>
+      <h2>Who We Are</h2>
+
+      <div class="game-grid">
+        <div class="game-card">
+          <h3>🚀 Our Mission</h3>
+          <p>
+            Our mission is to provide a next-level gaming experience where users
+            can enjoy multiple games with smooth performance, modern UI/UX, and
+            mobile-friendly gameplay.
+          </p>
+        </div>
+
+        <div class="game-card">
+          <h3>🎯 Our Vision</h3>
+          <p>
+            We aim to build one of the best gaming platforms where players can
+            explore Snake Game, Tic Tac Toe, Car Racing, Multiplayer Games,
+            Tournaments, and much more in one place.
+          </p>
+        </div>
+
+        <div class="game-card">
+          <h3>🔥 Why Choose Us</h3>
+          <p>
+            Premium design, responsive gameplay, smooth controls, mobile
+            support, modern animations, leaderboard systems, and future-ready
+            features make Gaming Zone special.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Our Future Plans</h2>
+
+      <div class="game-grid">
+        <div class="game-card">
+          <h3>🏆 Tournament Mode</h3>
+          <p>
+            Compete with players worldwide and win rewards with exciting live
+            tournaments.
+          </p>
+        </div>
+
+        <div class="game-card">
+          <h3>👤 User Profiles</h3>
+          <p>
+            Create your own gaming profile with achievements, levels, and
+            personal stats.
+          </p>
+        </div>
+
+        <div class="game-card">
+          <h3>💰 Rewards System</h3>
+          <p>
+            Earn coins, unlock premium content, and enjoy special gaming
+            rewards.
+          </p>
+        </div>
+      </div>
+
+      <div class="owner-box">
+        <h3>👑 Founder: RAHUL GUPTA</h3>
+        <p>
+          Designed and developed with passion by Rahul Gupta to create one of
+          the best modern gaming platforms with advanced UI/UX and premium
+          gameplay experience.
+        </p>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2026 Gaming Zone | Developed by RAHUL GUPTA | All Rights Reserved</p>
+    </footer>
+  </body>
+</html>

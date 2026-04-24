@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mini GTA Style Game</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+      body {
+        background: #0f172a;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 15px;
+        color: #fff;
+      }
+      .game-box {
+        width: 100%;
+        max-width: 950px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 16px;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 14px;
+        font-size: clamp(24px, 4vw, 40px);
+      }
+      .top-bar {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 12px;
+        text-align: center;
+        font-weight: bold;
+      }
+      .card span {
+        display: block;
+        margin-top: 5px;
+        font-size: 20px;
+      }
+      .world {
+        position: relative;
+        width: 100%;
+        height: 70vh;
+        min-height: 450px;
+        overflow: hidden;
+        border-radius: 18px;
+        border: 3px solid #22d3ee;
+        background: linear-gradient(
+          to bottom,
+          #38bdf8 0%,
+          #60a5fa 35%,
+          #3f6212 35%,
+          #166534 100%
+        );
+      }
+      .road {
+        position: absolute;
+        bottom: 0;
+        left: 35%;
+        width: 30%;
+        height: 100%;
+        background: #374151;
+      }
+      .player {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        left: 120px;
+        top: 300px;
+        font-size: 42px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2;
+      }
+      .enemy {
+        position: absolute;
+        font-size: 38px;
+        z-index: 2;
+      }
+      .coin {
+        position: absolute;
+        font-size: 28px;
+        z-index: 2;
+      }
+      .controls {
+        display: grid;
+        grid-template-columns: repeat(3, 80px);
+        justify-content: center;
+        gap: 10px;
+        margin-top: 18px;
+      }
+      .btn {
+        height: 60px;
+        border: none;
+        border-radius: 14px;
+        font-size: 24px;
+        font-weight: bold;
+        background: #22d3ee;
+        cursor: pointer;
+      }
+      .empty {
+        visibility: hidden;
+      }
+      .message {
+        text-align: center;
+        margin-top: 14px;
+        min-height: 30px;
+        font-weight: bold;
+        color: #4ade80;
+      }
+      @media (max-width: 700px) {
+        .top-bar {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .controls {
+          grid-template-columns: repeat(3, 70px);
+        }
+        .btn {
+          height: 55px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-box">
+      <h1>🚔 Mini GTA Open World</h1>
+
+      <div class="top-bar">
+        <div class="card">Money<span id="money">0</span></div>
+        <div class="card">Health<span id="health">100</span></div>
+        <div class="card">Police<span id="wanted">0</span></div>
+        <div class="card">Mission<span id="mission">Collect Cash</span></div>
+      </div>
+
+      <div class="world" id="world">
+        <div class="road"></div>
+        <div class="player" id="player">🕴️</div>
+      </div>
+
+      <div class="message" id="message"></div>
+
+      <div class="controls">
+        <button class="btn empty"></button>
+        <button class="btn" onclick="move('up')">⬆️</button>
+        <button class="btn empty"></button>
+
+        <button class="btn" onclick="move('left')">⬅️</button>
+        <button class="btn" onclick="attack()">🔫</button>
+        <button class="btn" onclick="move('right')">➡️</button>
+
+        <button class="btn empty"></button>
+        <button class="btn" onclick="move('down')">⬇️</button>
+        <button class="btn empty"></button>
+      </div>
+    </div>
+
+    <script>
+      const world = document.getElementById("world");
+      const player = document.getElementById("player");
+      const moneyEl = document.getElementById("money");
+      const healthEl = document.getElementById("health");
+      const wantedEl = document.getElementById("wanted");
+      const messageEl = document.getElementById("message");
+
+      let x = 120;
+      let y = 300;
+      let money = 0;
+      let health = 100;
+      let wanted = 0;
+
+      function updatePlayer() {
+        player.style.left = x + "px";
+        player.style.top = y + "px";
+      }
+
+      function move(dir) {
+        const step = 25;
+        const maxX = world.clientWidth - 60;
+        const maxY = world.clientHeight - 60;
+
+        if (dir === "left") x -= step;
+        if (dir === "right") x += step;
+        if (dir === "up") y -= step;
+        if (dir === "down") y += step;
+
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+        if (x > maxX) x = maxX;
+        if (y > maxY) y = maxY;
+
+        updatePlayer();
+        checkCollision();
+      }
+
+      function spawnCoin() {
+        const coin = document.createElement("div");
+        coin.className = "coin";
+        coin.innerText = "💰";
+        coin.style.left = Math.random() * (world.clientWidth - 60) + "px";
+        coin.style.top = Math.random() * (world.clientHeight - 80) + "px";
+        world.appendChild(coin);
+      }
+
+      function spawnEnemy() {
+        const enemy = document.createElement("div");
+        enemy.className = "enemy";
+        enemy.innerText = "👮";
+        enemy.style.left = Math.random() * (world.clientWidth - 60) + "px";
+        enemy.style.top = Math.random() * (world.clientHeight - 80) + "px";
+        world.appendChild(enemy);
+      }
+
+      function checkCollision() {
+        document.querySelectorAll(".coin").forEach((c) => {
+          const cx = parseInt(c.style.left);
+          const cy = parseInt(c.style.top);
+          if (Math.abs(x - cx) < 40 && Math.abs(y - cy) < 40) {
+            c.remove();
+            money += 100;
+            moneyEl.innerText = money;
+            messageEl.innerText = "💸 Cash Collected!";
+            if (money >= 500 && wanted === 0) {
+              wanted = 1;
+              wantedEl.innerText = wanted;
+              messageEl.innerText = "🚔 Police Activated!";
+              for (let i = 0; i < 2; i++) spawnEnemy();
+            }
+            spawnCoin();
+          }
+        });
+
+        document.querySelectorAll(".enemy").forEach((e) => {
+          const ex = parseInt(e.style.left);
+          const ey = parseInt(e.style.top);
+          if (Math.abs(x - ex) < 40 && Math.abs(y - ey) < 40) {
+            health -= 10;
+            healthEl.innerText = health;
+            messageEl.innerText = "⚠️ Police Hit You!";
+            e.style.left = Math.random() * (world.clientWidth - 60) + "px";
+            e.style.top = Math.random() * (world.clientHeight - 80) + "px";
+            if (health <= 0) {
+              messageEl.innerText = "💀 Game Over";
+            }
+          }
+        });
+      }
+
+      function attack() {
+        let removed = false;
+        document.querySelectorAll(".enemy").forEach((e) => {
+          const ex = parseInt(e.style.left);
+          const ey = parseInt(e.style.top);
+          if (Math.abs(x - ex) < 120 && Math.abs(y - ey) < 120 && !removed) {
+            e.remove();
+            removed = true;
+            wanted++;
+            wantedEl.innerText = wanted;
+            messageEl.innerText = "🔫 Police Down!";
+            spawnEnemy();
+          }
+        });
+
+        if (!removed) {
+          messageEl.innerText = "❌ No Enemy Nearby";
+        }
+      }
+
+      for (let i = 0; i < 5; i++) spawnCoin();
+      updatePlayer();
+    </script>
+  </body>
+</html>

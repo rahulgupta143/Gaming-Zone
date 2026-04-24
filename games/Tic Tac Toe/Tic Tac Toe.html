@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Premium Tic Tac Toe</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0b1020, #111827);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        color: white;
+      }
+
+      .game-box {
+        width: 100%;
+        max-width: 500px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 25px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+        animation: fadeUp 0.8s ease;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+        font-size: 30px;
+      }
+
+      .players {
+        display: grid;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      input {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 14px;
+        outline: none;
+        font-size: 16px;
+      }
+
+      .status {
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #00e5ff;
+        min-height: 28px;
+      }
+
+      .board {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .cell {
+        aspect-ratio: 1/1;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 42px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        user-select: none;
+      }
+
+      .cell:hover {
+        transform: scale(1.05);
+        background: rgba(0, 229, 255, 0.15);
+      }
+
+      button {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 14px;
+        background: #00e5ff;
+        color: black;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        transform: translateY(-3px);
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 24px;
+        }
+
+        .cell {
+          font-size: 34px;
+        }
+
+        .status {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-box">
+      <h1>⭕ Premium Tic Tac Toe ❌</h1>
+
+      <div class="players">
+        <input type="text" id="player1" placeholder="Enter Player 1 Name" />
+        <input type="text" id="player2" placeholder="Enter Player 2 Name" />
+      </div>
+
+      <div class="status" id="status">Enter player names and start playing</div>
+
+      <div class="board" id="board">
+        <div class="cell" onclick="playMove(0)"></div>
+        <div class="cell" onclick="playMove(1)"></div>
+        <div class="cell" onclick="playMove(2)"></div>
+        <div class="cell" onclick="playMove(3)"></div>
+        <div class="cell" onclick="playMove(4)"></div>
+        <div class="cell" onclick="playMove(5)"></div>
+        <div class="cell" onclick="playMove(6)"></div>
+        <div class="cell" onclick="playMove(7)"></div>
+        <div class="cell" onclick="playMove(8)"></div>
+      </div>
+
+      <button onclick="restartGame()">🔁 Restart Game</button>
+    </div>
+
+    <script>
+      const cells = document.querySelectorAll(".cell");
+      const statusText = document.getElementById("status");
+      const player1Input = document.getElementById("player1");
+      const player2Input = document.getElementById("player2");
+
+      let board = ["", "", "", "", "", "", "", "", ""];
+      let currentPlayer = "X";
+      let gameRunning = true;
+
+      const winPatterns = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
+
+      function getPlayerName(symbol) {
+        const p1 = player1Input.value.trim() || "Player 1";
+        const p2 = player2Input.value.trim() || "Player 2";
+        return symbol === "X" ? p1 : p2;
+      }
+
+      function playMove(index) {
+        if (board[index] !== "" || !gameRunning) return;
+
+        board[index] = currentPlayer;
+        cells[index].innerText = currentPlayer;
+
+        checkWinner();
+      }
+
+      function checkWinner() {
+        let winnerFound = false;
+
+        for (let pattern of winPatterns) {
+          const [a, b, c] = pattern;
+
+          if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            winnerFound = true;
+            const winnerName = getPlayerName(currentPlayer);
+
+            statusText.innerText = `🏆 Winner: ${winnerName} (${currentPlayer})`;
+            gameRunning = false;
+            return;
+          }
+        }
+
+        if (!board.includes("")) {
+          statusText.innerText = "🤝 Match Draw!";
+          gameRunning = false;
+          return;
+        }
+
+        currentPlayer = currentPlayer === "X" ? "O" : "X";
+        statusText.innerText = `${getPlayerName(currentPlayer)}'s Turn (${currentPlayer})`;
+      }
+
+      function restartGame() {
+        board = ["", "", "", "", "", "", "", "", ""];
+        currentPlayer = "X";
+        gameRunning = true;
+
+        cells.forEach((cell) => {
+          cell.innerText = "";
+        });
+
+        statusText.innerText = `${getPlayerName(currentPlayer)}'s Turn (${currentPlayer})`;
+      }
+
+      restartGame();
+    </script>
+  </body>
+</html>

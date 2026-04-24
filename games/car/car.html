@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced Car Racing Game</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #07111f, #0f172a, #111827);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        color: #fff;
+      }
+
+      .game-box {
+        width: 100%;
+        max-width: 520px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(14px);
+        border-radius: 25px;
+        padding: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 28px;
+        margin-bottom: 15px;
+      }
+
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-weight: 700;
+        font-size: 16px;
+      }
+
+      .game-area {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        height: 650px;
+        margin: auto;
+        overflow: hidden;
+        border-radius: 20px;
+        border: 4px solid #00e5ff;
+        background: linear-gradient(
+          to right,
+          #1f2937 0%,
+          #1f2937 18%,
+          #2d2d2d 18%,
+          #2d2d2d 82%,
+          #1f2937 82%,
+          #1f2937 100%
+        );
+        box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
+      }
+
+      /* Road center lines */
+      .road-line {
+        position: absolute;
+        width: 8px;
+        height: 100px;
+        background: white;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0.9;
+      }
+
+      /* Trees */
+      .tree {
+        position: absolute;
+        width: 30px;
+        height: 50px;
+      }
+
+      .tree::before {
+        content: "";
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        background: #16a34a;
+        border-radius: 50%;
+        top: 0;
+        left: 3px;
+        box-shadow:
+          -10px 10px #22c55e,
+          10px 10px #15803d;
+      }
+
+      .tree::after {
+        content: "";
+        position: absolute;
+        width: 8px;
+        height: 22px;
+        background: #78350f;
+        bottom: 0;
+        left: 11px;
+        border-radius: 4px;
+      }
+
+      .player-car {
+        position: absolute;
+        width: 60px;
+        height: 100px;
+        bottom: 20px;
+        left: 170px;
+        border-radius: 14px;
+        background: linear-gradient(to bottom, #00e5ff, #0284c7);
+        box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+      }
+
+      .enemy-car {
+        position: absolute;
+        width: 60px;
+        height: 100px;
+        top: -120px;
+        left: 170px;
+        border-radius: 14px;
+        background: linear-gradient(to bottom, #ff4d4d, #dc2626);
+        box-shadow: 0 0 20px rgba(255, 59, 59, 0.4);
+      }
+
+      .controls {
+        display: flex;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      button {
+        flex: 1;
+        padding: 14px;
+        border: none;
+        border-radius: 14px;
+        background: #00e5ff;
+        color: #000;
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        transform: translateY(-3px);
+      }
+
+      .game-over {
+        margin-top: 15px;
+        color: #ff4d4d;
+        font-weight: 700;
+        min-height: 30px;
+        font-size: 18px;
+      }
+
+      @media (max-width: 600px) {
+        .game-area {
+          height: 520px;
+        }
+
+        .player-car,
+        .enemy-car {
+          width: 52px;
+          height: 90px;
+        }
+
+        h1 {
+          font-size: 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-box">
+      <h1>🏎 Premium Racing Game</h1>
+
+      <div class="top-bar">
+        <div>Score: <span id="score">0</span></div>
+        <div>Speed: <span id="speed">8</span></div>
+      </div>
+
+      <div class="game-area" id="gameArea">
+        <!-- Road Lines -->
+        <div class="road-line" style="top: 0px"></div>
+        <div class="road-line" style="top: 150px"></div>
+        <div class="road-line" style="top: 300px"></div>
+        <div class="road-line" style="top: 450px"></div>
+
+        <!-- Trees Left -->
+        <div class="tree" style="left: 10px; top: 40px"></div>
+        <div class="tree" style="left: 10px; top: 180px"></div>
+        <div class="tree" style="left: 10px; top: 320px"></div>
+        <div class="tree" style="left: 10px; top: 460px"></div>
+
+        <!-- Trees Right -->
+        <div class="tree" style="right: 10px; top: 80px"></div>
+        <div class="tree" style="right: 10px; top: 220px"></div>
+        <div class="tree" style="right: 10px; top: 360px"></div>
+        <div class="tree" style="right: 10px; top: 500px"></div>
+
+        <div class="player-car" id="playerCar"></div>
+        <div class="enemy-car" id="enemyCar"></div>
+      </div>
+
+      <div class="game-over" id="gameOver"></div>
+
+      <div class="controls">
+        <button onclick="moveLeft()">⬅ Left</button>
+        <button onclick="moveRight()">Right ➡</button>
+      </div>
+
+      <div class="controls">
+        <button onclick="restartGame()">🔁 Restart Game</button>
+      </div>
+    </div>
+
+    <script>
+      const playerCar = document.getElementById("playerCar");
+      const enemyCar = document.getElementById("enemyCar");
+      const scoreEl = document.getElementById("score");
+      const speedEl = document.getElementById("speed");
+      const gameOverEl = document.getElementById("gameOver");
+
+      let playerX = 170;
+      let enemyY = -120;
+      let enemyX = randomLane();
+      let score = 0;
+      let speed = 8; // faster start
+      let gameRunning = true;
+
+      function randomLane() {
+        const lanes = [50, 170, 290];
+        return lanes[Math.floor(Math.random() * lanes.length)];
+      }
+
+      function moveLeft() {
+        if (playerX > 50) {
+          playerX -= 120;
+          playerCar.style.left = playerX + "px";
+        }
+      }
+
+      function moveRight() {
+        if (playerX < 290) {
+          playerX += 120;
+          playerCar.style.left = playerX + "px";
+        }
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") moveLeft();
+        if (e.key === "ArrowRight") moveRight();
+      });
+
+      function checkCollision() {
+        if (enemyY > 460 && enemyY < 560 && enemyX === playerX) {
+          gameOver();
+        }
+      }
+
+      function gameOver() {
+        gameRunning = false;
+        gameOverEl.innerText = "💀 Game Over! Restart and race again!";
+      }
+
+      function restartGame() {
+        playerX = 170;
+        enemyY = -120;
+        enemyX = randomLane();
+        score = 0;
+        speed = 8;
+        gameRunning = true;
+
+        playerCar.style.left = playerX + "px";
+        enemyCar.style.left = enemyX + "px";
+        enemyCar.style.top = enemyY + "px";
+
+        scoreEl.innerText = score;
+        speedEl.innerText = speed;
+        gameOverEl.innerText = "";
+
+        requestAnimationFrame(gameLoop);
+      }
+
+      function gameLoop() {
+        if (!gameRunning) return;
+
+        enemyY += speed;
+
+        enemyCar.style.top = enemyY + "px";
+        enemyCar.style.left = enemyX + "px";
+
+        if (enemyY > 700) {
+          enemyY = -120;
+          enemyX = randomLane();
+
+          score++;
+          scoreEl.innerText = score;
+
+          if (score % 3 === 0) {
+            speed += 1; // faster increase
+            speedEl.innerText = speed;
+          }
+        }
+
+        checkCollision();
+        requestAnimationFrame(gameLoop);
+      }
+
+      restartGame();
+    </script>
+  </body>
+</html>

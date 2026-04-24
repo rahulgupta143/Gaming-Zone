@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced Memory Card Game</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0f172a, #111827, #1e293b);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        color: #fff;
+      }
+
+      .game-box {
+        width: 100%;
+        max-width: 900px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 24px;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 18px;
+        font-size: clamp(24px, 4vw, 38px);
+      }
+
+      .top-bar {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .stat {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 14px;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .stat span {
+        display: block;
+        margin-top: 6px;
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .board {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+
+      .card {
+        aspect-ratio: 1/1;
+        perspective: 1000px;
+        cursor: pointer;
+      }
+
+      .inner {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: 0.5s;
+      }
+
+      .card.flipped .inner,
+      .card.matched .inner {
+        transform: rotateY(180deg);
+      }
+
+      .front,
+      .back {
+        position: absolute;
+        inset: 0;
+        border-radius: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: clamp(28px, 4vw, 42px);
+        backface-visibility: hidden;
+      }
+
+      .front {
+        background: linear-gradient(135deg, #22d3ee, #06b6d4);
+        color: #001219;
+        font-weight: 700;
+      }
+
+      .back {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transform: rotateY(180deg);
+      }
+
+      .actions {
+        margin-top: 20px;
+        display: flex;
+        gap: 12px;
+      }
+
+      button {
+        flex: 1;
+        border: none;
+        border-radius: 14px;
+        padding: 14px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        background: #22d3ee;
+        color: #000;
+      }
+
+      .message {
+        text-align: center;
+        margin-top: 18px;
+        min-height: 28px;
+        font-weight: 700;
+        font-size: 18px;
+        color: #4ade80;
+      }
+
+      @media (max-width: 768px) {
+        .top-bar {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 560px) {
+        .board {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 10px;
+        }
+        .actions {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-box">
+      <h1>🧠 Premium Memory Card Game</h1>
+
+      <div class="top-bar">
+        <div class="stat">Moves<span id="moves">0</span></div>
+        <div class="stat">Matches<span id="matches">0</span></div>
+        <div class="stat">Timer<span id="timer">0s</span></div>
+        <div class="stat">Level<span id="level">Easy</span></div>
+      </div>
+
+      <div class="board" id="board"></div>
+
+      <div class="message" id="message"></div>
+
+      <div class="actions">
+        <button onclick="restartGame()">🔁 Restart</button>
+        <button onclick="nextLevel()">🚀 Next Level</button>
+      </div>
+    </div>
+
+    <script>
+      const board = document.getElementById("board");
+      const movesEl = document.getElementById("moves");
+      const matchesEl = document.getElementById("matches");
+      const timerEl = document.getElementById("timer");
+      const levelEl = document.getElementById("level");
+      const messageEl = document.getElementById("message");
+
+      const allEmojis = [
+        "🚗",
+        "🚀",
+        "🔥",
+        "💎",
+        "⚽",
+        "🎯",
+        "🎮",
+        "👑",
+        "🍕",
+        "🎵",
+        "🏆",
+        "💖",
+      ];
+      const levels = [
+        { name: "Easy", pairs: 6 },
+        { name: "Medium", pairs: 8 },
+        { name: "Hard", pairs: 10 },
+      ];
+
+      let levelIndex = 0;
+      let cards = [];
+      let firstCard = null;
+      let secondCard = null;
+      let lock = false;
+      let moves = 0;
+      let matches = 0;
+      let seconds = 0;
+      let timer;
+
+      function shuffle(arr) {
+        return arr.sort(() => Math.random() - 0.5);
+      }
+
+      function startTimer() {
+        clearInterval(timer);
+        seconds = 0;
+        timerEl.innerText = "0s";
+        timer = setInterval(() => {
+          seconds++;
+          timerEl.innerText = seconds + "s";
+        }, 1000);
+      }
+
+      function createBoard() {
+        board.innerHTML = "";
+        messageEl.innerText = "";
+        firstCard = null;
+        secondCard = null;
+        lock = false;
+        moves = 0;
+        matches = 0;
+        movesEl.innerText = 0;
+        matchesEl.innerText = 0;
+
+        const config = levels[levelIndex];
+        levelEl.innerText = config.name;
+
+        const selected = allEmojis.slice(0, config.pairs);
+        cards = shuffle([...selected, ...selected]);
+
+        cards.forEach((emoji, index) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.dataset.value = emoji;
+
+          card.innerHTML = `
+      <div class="inner">
+        <div class="front">?</div>
+        <div class="back">${emoji}</div>
+      </div>
+    `;
+
+          card.addEventListener("click", () => flipCard(card));
+          board.appendChild(card);
+        });
+
+        startTimer();
+      }
+
+      function flipCard(card) {
+        if (
+          lock ||
+          card.classList.contains("flipped") ||
+          card.classList.contains("matched")
+        )
+          return;
+
+        card.classList.add("flipped");
+
+        if (!firstCard) {
+          firstCard = card;
+          return;
+        }
+
+        secondCard = card;
+        moves++;
+        movesEl.innerText = moves;
+        lock = true;
+
+        if (firstCard.dataset.value === secondCard.dataset.value) {
+          firstCard.classList.add("matched");
+          secondCard.classList.add("matched");
+          matches++;
+          matchesEl.innerText = matches;
+          resetTurn();
+
+          if (matches === levels[levelIndex].pairs) {
+            clearInterval(timer);
+            messageEl.innerText = "🏆 Level Complete! Great Job!";
+          }
+        } else {
+          setTimeout(() => {
+            firstCard.classList.remove("flipped");
+            secondCard.classList.remove("flipped");
+            resetTurn();
+          }, 800);
+        }
+      }
+
+      function resetTurn() {
+        firstCard = null;
+        secondCard = null;
+        lock = false;
+      }
+
+      function restartGame() {
+        createBoard();
+      }
+
+      function nextLevel() {
+        if (levelIndex < levels.length - 1) {
+          levelIndex++;
+        } else {
+          levelIndex = 0;
+        }
+        createBoard();
+      }
+
+      createBoard();
+    </script>
+  </body>
+</html>
