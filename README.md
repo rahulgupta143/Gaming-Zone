@@ -33,7 +33,7 @@ Designed and developed with passion to create one of the best modern gaming plat
 ## 📩 Contact
 
 * 📍 Mumbai, Maharashtra, India
-* 📧 [rahulgamingzone@gmail.com](mailto:rahulgamingzone@gmail.com)
+* 📧 [rahulgamingzone@gmail.com](mailto:guptarahul1431@gmail.com)
 
 ## 🌟 Future Goals
 
